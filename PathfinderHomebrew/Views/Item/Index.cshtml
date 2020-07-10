@@ -1,0 +1,60 @@
+﻿@model IEnumerable<PathfinderHomebrew.Models.Item>
+
+@{ 
+    var parms = new Dictionary<string, string>
+    {
+        { "type", ViewBag.Type }
+    };
+}
+
+<h1>Items | <span><a asp-area="" asp-controller="Item" asp-action="Create" asp-all-route-data="parms"><b>Add New Item</b></a></span></h1>
+
+<p>
+    Below is a list of homebrew and thrird-party items allowed.
+</p>
+
+<p class="pager">
+    @if (ViewBag.HasPreviousPage)
+    {
+        <a class="prev" href="@Url.Action("Index", "Item" , new { type = ViewBag.Type, page = ViewBag.PreviousPage })">
+            &lt; Previous
+        </a>
+    }
+
+    @if (ViewBag.HasNextPage)
+    {
+        <a class="next" href="@Url.Action("Index", "Item" , new { type = ViewBag.Type, page = ViewBag.NextPage })">
+            Next &gt;
+        </a>
+    }
+</p>
+
+<div class="feat-list">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Item Name</th>
+                <th scope="col">Category/Type</th>
+                <th scope="col">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="feat-listing"></tr>
+                <th scope="row">@Html.ActionLink(item.Name, "Item", "Item", new { key = item.Key })</th>
+
+            @if (item.Type != ItemType.Wondrous_Item)
+            {
+                <td>@item.Type</td>
+            }
+            else
+            {
+                <td>@item.ItemSlot</td>
+            }
+
+            <td>@item.Price</td>
+            }
+            </tbody>
+        </table>
+    </div>

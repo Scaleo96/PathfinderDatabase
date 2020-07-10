@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - The Souls For Hire Archive</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="body-container-bg">
+    <header>
+        <nav class="navbar navbar-dark navbar-expand-sm navbar-toggleable-sm bg-lbrown border-bottom border-dark box-shadow mb-3">
+            <button type="button" id="sidebarCollapse" class="btn btn-sidebar">
+                <i class="fas fa-align-left"></i>
+                <span>Toggle Sidebar</span>
+            </button>
+            <div class="container">
+                <a class="navbar-brand bg-Nav-Link" asp-area="" asp-controller="Home" asp-action="Index"><b>The Souls For Hire Archive</b></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link bg-Nav-Link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link bg-Nav-Link" asp-area="" asp-controller="Feat" asp-action="Index">Feats</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>The Souls For Hire Archive</h3>
+            </div>
+
+            <ul class="list-unstyled components">
+                <p>Navigation</p>
+                <li class="active">
+                    <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li>
+                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Items</a>
+                    <ul class="collapse list-unstyled" id="homeSubmenu">
+                        <li>
+                            <a href="#">Weapons</a>
+                        </li>
+                        <li>
+                            <a href="#">Armor</a>
+                        </li>
+                        <li>
+                            <a href="#">Rings</a>
+                        </li>
+                        <li>
+                            <a href="#">Wondrous Items</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Feats</a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu">
+                        <li>
+                            <a href="@Url.Action("Index", "Feat" , new { page = 0, featType = FeatType.General })">General</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Feat" , new { page = 0, featType = FeatType.Combat })">Combat</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Feat" , new { page = 0, featType = FeatType.Metamagic })">Metamagic</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Feat" , new { page = 0, featType = FeatType.Story })">Story</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+        </nav>
+        <div id="content">
+            <div class="container">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="border-top border-dark footer">
+        <div class="footer-padding">
+            &copy; 2020 - The Souls For Hire Archive
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,46 @@
+﻿@model IEnumerable<PathfinderHomebrew.Models.Feat>
+
+<h1>Feats | <span><a asp-area="" asp-controller="Feat" asp-action="Create"><b>Add New Feat</b></a></span></h1>
+
+<p>
+    Below is a list of homebrew and thrird-party feats allowed.
+</p>
+
+<p class="pager">
+    @if (ViewBag.HasPreviousPage)
+    {
+        <a class="prev" href="@Url.Action("Index", "Feat" , new { page = ViewBag.PreviousPage })">
+            &lt; Previous
+        </a>
+    }
+
+    @if (ViewBag.HasNextPage)
+    {
+        <a class="next" href="@Url.Action("Index", "Feat" , new { page = ViewBag.NextPage })">
+            Next &gt;
+        </a>
+    }
+</p>
+
+<div class="feat-list">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Feat Name</th>
+                <th scope="col">Category/Type</th>
+                <th scope="col">Prerequisites</th>
+                <th scope="col">Benefit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var feat in Model)
+            {
+                <tr class="feat-listing"></tr>
+                <th scope="row">@Html.ActionLink(feat.Name, "Feat", "Feat", new { key = feat.Key })</th>
+                <td>@feat.Type</td>
+                <td>@feat.Prerequisites</td>
+                <td>@feat.BenefitAbridged</td>
+            }
+        </tbody>
+    </table>
+</div>
