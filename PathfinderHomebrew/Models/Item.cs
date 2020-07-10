@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
@@ -32,15 +33,45 @@ namespace PathfinderHomebrew.Models
             set { _key = value; }
         }
 
+        public string TypeName()
+        {
+            switch (Type)
+            {
+                case ItemType.Armor:
+                    return "Armor";
+
+                case ItemType.Ring:
+                    return "Ring";
+
+                case ItemType.Staff:
+                    return "Staff";
+
+                case ItemType.Weapon:
+                    return "Weapon";
+
+                case ItemType.Wondrous_Item:
+                    return "Wondrous Item";
+            }
+
+            return "";
+        }
+
         public ItemType Type { get; set; }
+        [Display(Name = "Item Slot")]
         public ItemSlot ItemSlot { get; set; }
         public string Name { get; set; }
+        [Display(Name = "Auras")]
         public List<AuraTypeM> AuraTypes { get; set; }
+        [Display(Name = "Aura Strength")]
         public AuraStrength AuraStrength { get; set; }
+        [Display(Name = "Caster Level")]
         public int CasterLevel { get; set; }
         public float Weight { get; set; }
         public int Price { get; set; }
         public string Description { get; set; }
+        [Display(Name = "Construction Requirements")]
         public string ConstructionRequirements { get; set; }
+
+        public string AuraTypeString { get; set; }
     }
 }

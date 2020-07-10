@@ -7,7 +7,13 @@ namespace PathfinderHomebrew.Models
 {
     public class AuraTypeM
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public AuraType AuraType { get; set; }
+
+        public AuraTypeM (long id, AuraType auraType)
+        {
+            Id = id;
+            AuraType = auraType;
+        }
     }
 }

@@ -100,6 +100,12 @@ namespace PathfinderHomebrew.Controllers
         public IActionResult Item(string key)
         {
             var item = _db.Items.FirstOrDefault(x => x.Key == key);
+            string[] auras = item.AuraTypeString.Split('?');
+            item.AuraTypes = new List<AuraTypeM>();
+            foreach(string s in auras)
+            {
+                item.AuraTypes.Add(new AuraTypeM(item.Id, (AuraType)Int32.Parse(s)));
+            }
             return View(item);
         }
 
@@ -113,8 +119,21 @@ namespace PathfinderHomebrew.Controllers
 
 
         [HttpPost, Route("create")]
-        public IActionResult Create(Item item, string type, int page = 0)
+        public IActionResult Create(Item item, AuraType[] AuraTypes, string type, int page = 0)
         {
+            item.AuraTypes = new List<AuraTypeM>();
+            string auraString = "";
+
+            for (int i = 0; i < AuraTypes.Length; i++)
+            {
+                item.AuraTypes.Add(new AuraTypeM(item.Id, AuraTypes[i]));
+                //item.AuraTypes[i].AuraType = AuraTypes[i];
+                //item.Id = item.Id;
+                auraString += i < AuraTypes.Length - 1 ? ((int)AuraTypes[i]).ToString() + "?" : ((int)AuraTypes[i]).ToString();
+            }
+
+            item.AuraTypeString = auraString;
+
             if (!ModelState.IsValid)
             {
                 return View();

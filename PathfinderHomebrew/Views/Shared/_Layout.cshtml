@@ -50,16 +50,19 @@
                     <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Items</a>
                     <ul class="collapse list-unstyled" id="homeSubmenu">
                         <li>
-                            <a href="#">Weapons</a>
+                            <a href="@Url.Action("Index", "Item", new {type = "Weapons", page = 0 })">Weapons</a>
                         </li>
                         <li>
-                            <a href="#">Armor</a>
+                            <a href="@Url.Action("Index", "Item", new {type = "Armor", page = 0 })">Armor</a>
                         </li>
                         <li>
-                            <a href="#">Rings</a>
+                            <a href="@Url.Action("Index", "Item", new {type = "Rings", page = 0 })">Rings</a>
                         </li>
                         <li>
-                            <a href="#">Wondrous Items</a>
+                            <a href="@Url.Action("Index", "Item", new {type = "Staves", page = 0 })">Staves</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Item", new {type = "WondrousItems", page = 0 })">Wondrous Items</a>
                         </li>
                     </ul>
                 </li>

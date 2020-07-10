@@ -1,7 +1,7 @@
 ﻿@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model PathfinderHomebrew.Models.Item
 
-<h1>Create A New Item | <span>@Html.ActionLink("Back", "Index", "Item", new { type = ViewBag.Type }, new { @class="feat-Link", @style="font-weight: bold;" })</span></h1>
+<h1>Create A New Item | <span>@Html.ActionLink("Back", "Index", "Item", new { type = ViewBag.Type }, new { @class = "feat-Link", @style = "font-weight: bold;" })</span></h1>
 
 <fieldset>
     <form asp-action="Create" asp-controller="Item">
@@ -9,91 +9,115 @@
         <div asp-validation-summary="ModelOnly" class="input-validation-error"></div>
 
 
-        <p>
-            <label asp-for="Type"></label>
-            @Html.DropDownList("Type", new SelectList(Enum.GetValues(typeof(ItemType))), "Item Type", new { @class = "form-control", @id = "itemType" })
-            <span asp-validation-for="Type"></span>
-        </p>
+        <div>
+            <p>
+                <label asp-for="Type"></label>
+                @Html.DropDownList("Type", new SelectList(Enum.GetValues(typeof(ItemType))), "Type", new { @class = "form-control", @id = "itemType" })
+                <span asp-validation-for="Type"></span>
+            </p>
+        </div>
 
-        <p>
-            <label asp-for="ItemSlot" id="itemSlotH"></label>
-            @Html.DropDownList("Item Slot", new SelectList(Enum.GetValues(typeof(ItemSlot))), "Item Slot", new { @class = "form-control", @id = "itemSlot" })
-            <span asp-validation-for="Type"></span>
-        </p>
+        <div>
+            <p>
+                <label asp-for="ItemSlot" id="itemSlotH"></label>
+                @Html.DropDownList("ItemSlot", new SelectList(Enum.GetValues(typeof(ItemSlot))), new { @class = "form-control", @id = "itemSlot" })
+                <span asp-validation-for="Type"></span>
+            </p>
+        </div>
 
-        <p>
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" placeholder="Item name" />
-            <span asp-validation-for="Name"></span>
-        </p>
+        <div>
+            <p>
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" placeholder="Item name" />
+                <span asp-validation-for="Name"></span>
+            </p>
+        </div>
 
-        <p>
-            <label asp-for="AuraTypes"></label>
-            @Html.DropDownList("Aura Type", new MultiSelectList(Enum.GetValues(typeof(AuraType))), "Aura Type", new { @class = "form-control" })
-            <span asp-validation-for="AuraTypes"></span>
-        </p>
+        <div>
+            <p>
+                <label asp-for="AuraTypes"></label>
+            </p>
+            <p>
+                @Html.DropDownList("AuraTypes", new MultiSelectList(Enum.GetValues(typeof(AuraType))), new { multiple = "multiple" })
+                <span asp-validation-for="AuraTypes"></span>
+            </p>
+        </div>
 
-        <p>
-            <label asp-for="AuraStrength"></label>
-            @Html.DropDownList("Aura Strength", new SelectList(Enum.GetValues(typeof(AuraStrength))), "Aura Strength", new { @class = "form-control" })
-            <span asp-validation-for="AuraStrength"></span>
-        </p>
+        <div>
+            <p>
+                <label asp-for="AuraStrength"></label>
+                @Html.DropDownList("AuraStrength", new SelectList(Enum.GetValues(typeof(AuraStrength))), "AuraStrength", new { @class = "form-control" })
+                <span asp-validation-for="AuraStrength"></span>
+            </p>
+        </div>
 
-        <p>
-            <label asp-for="CasterLevel"></label>
-            <input asp-for="CasterLevel" class="form-control" placeholder="Enter Caster Level"></>
-            <span asp-validation-for="CasterLevel"></span>
-        </p>
+        <div>
+            <p>
+                <label asp-for="CasterLevel"></label>
+                <input asp-for="CasterLevel" class="form-control" placeholder="Enter Caster Level"></>
+                <span asp-validation-for="CasterLevel"></span>
+            </p>
+        </div>
 
-        <p>
-            <label asp-for="Weight"></label>
-            <input asp-for="Weight" class="form-control" placeholder="Enter Weight"></>
-            <span asp-validation-for="Weight"></span>
-        </p>
+        <div>
+            <p>
+                <label asp-for="Weight"></label>
+                <input asp-for="Weight" class="form-control" placeholder="Enter Weight"></>
+                <span asp-validation-for="Weight"></span>
+            </p>
+        </div>
 
-        <p>
-            <label asp-for="Price"></label>
-            <input asp-for="Price" class="form-control" placeholder="Enter Price"></>
-            <span asp-validation-for="Price"></span>
-        </p>
+        <div>
+            <p>
+                <label asp-for="Price"></label>
+                <input asp-for="Price" class="form-control" placeholder="Enter Price"></>
+                <span asp-validation-for="Price"></span>
+            </p>
+        </div>
 
-        <p>
-            <label asp-for="Description"></label>
-            <textarea asp-for="Description" class="form-control" placeholder="Enter Item Description"></textarea>
-            <span asp-validation-for="Description"></span>
-        </p>
+        <div>
+            <p>
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control" placeholder="Enter Item Description"></textarea>
+                <span asp-validation-for="Description"></span>
+            </p>
+        </div>
 
-        <p>
-            <label asp-for="ConstructionRequirements"></label>
-            <textarea asp-for="ConstructionRequirements" class="form-control" placeholder="Enter Construction Requirements"></textarea>
-            <span asp-validation-for="ConstructionRequirements"></span>
-        </p>
+        <div>
+            <p>
+                <label asp-for="ConstructionRequirements"></label>
+                <textarea asp-for="ConstructionRequirements" class="form-control" placeholder="Enter Construction Requirements"></textarea>
+                <span asp-validation-for="ConstructionRequirements"></span>
+            </p>
+        </div>
 
-        <p>
-            <button type="submit">Create Feat</button>
-        </p>
+        <div>
+            <p>
+                <button type="submit">Create Item</button>
+            </p>
+        </div>
 
     </form>
 </fieldset>
 
 @section Scripts {
- <script>
-     $('#itemSlot').hide();
-     $('#itemSlotH').hide();
+    <script type="text/javascript">
+        $('#itemSlot').hide();
+        $('#itemSlotH').hide();
 
-     $("#itemType").change(function () {
-         if ($(this).val().toString() == "Wondrous_Item") {
-             $('#itemSlot').show();
-             $('#itemSlotH').show();
-             $('#itemSlot').attr('required', '');
-             $('#itemSlot').attr('data-error', 'This field is required.');
-         }
-         else {
-             $('#itemSlot').hide();
-             $('#itemSlotH').hide();
-             $('#itemSlot').removeAttr('required');
-             $('#itemSlot').removeAttr('data-error');
-         }
-     });
- </script>
+        $("#itemType").change(function () {
+            if ($(this).val().toString() == "Wondrous_Item") {
+                $('#itemSlot').show();
+                $('#itemSlotH').show();
+                $('#itemSlot').attr('required', '');
+                $('#itemSlot').attr('data-error', 'This field is required.');
+            }
+            else {
+                $('#itemSlot').hide();
+                $('#itemSlotH').hide();
+                $('#itemSlot').removeAttr('required');
+                $('#itemSlot').removeAttr('data-error');
+            }
+        });
+    </script>
 }

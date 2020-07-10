@@ -2,7 +2,7 @@
 
 <article>
     <h1>
-        <b>(@Model.Type.ToString()) @Model.Name</b>
+        <b>(@Model.TypeName()) @Model.Name</b>
 
         <span> | <a class="feat-Link" href="@Url.Action("Remove", "Item", new { key = Model.Key })">Delete</a></span>
         <br />
@@ -12,31 +12,27 @@
     </div>
     <div class="content feat-Content">
 
-        <p><b>Aura</b> @Model.AuraStrength @for (int i = 0; i < Model.AuraTypes.Count; i++)
-{
- <span>
-@Model.AuraTypes[i]
-@if (Model.AuraTypes.Count - 1 < i)
-{
-<p> and </p>
-}
-</span>
-}
- <b>CL</b>
-@Model.CasterLevel
- th; 
-<b>Weight </b>
-@Model.Weight
-lbs; 
-<b>Price </b>
-@Model.Price
-gp
-</p>
+        <p>
+            <b class="black-ben">Aura</b> @Model.AuraStrength
+            @for (int i = 0; i < Model.AuraTypes.Count; i++)
+            {@Model.AuraTypes[i].AuraType.ToString()@if (Model.AuraTypes.Count - 1 > i)
+            {<span>, </span>}
+            else
+            {<span>;</span>}}
+            <b class="black-ben">CL</b>
+            @(Model.CasterLevel)th;
+            <b class="black-ben">Weight </b>
+            @Model.Weight
+            lbs;
+            <b class="black-ben">Price </b>
+            @Model.Price
+            gp
+        </p>
 
         <p class="item-divider">DESCRIPTION</p>
         <p>@Model.Description</p>
         <p class="item-divider">CONSTRUCTION REQUIREMENTS</p>
-        <p>@Model.ConstructionRequirements; <b>Cost </b> @Model.Price/2 gp</p>
+        <p>@Model.ConstructionRequirements; <b>Cost </b> @(Model.Price/2) gp</p>
 
-        </div>
-    </article>
+    </div>
+</article>
