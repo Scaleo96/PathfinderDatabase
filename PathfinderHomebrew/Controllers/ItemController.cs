@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PathfinderHomebrew.Models;
 
@@ -18,21 +19,13 @@ namespace PathfinderHomebrew.Controllers
         }
 
         [Route("{type}")]
-        public IActionResult Index(string type, int page = 0)
+        public IActionResult Index(string type = "All", int page = 0)
         {
             var pageSize = 2;
-            var totalPosts = _db.Items.Count();
-            var totalPages = totalPosts / pageSize;
             var previousPage = page - 1;
             var nextPage = page + 1;
 
-            ViewBag.PreviousPage = previousPage;
-            ViewBag.HasPreviousPage = previousPage >= 0;
-            ViewBag.NextPage = nextPage;
-            ViewBag.HasNextPage = nextPage < totalPages;
-
-            ViewBag.Type = type;
-
+            var totalItems = _db.Items.ToArray();
             var posts =
                         _db.Items
                         .Skip(pageSize * page)
@@ -42,51 +35,61 @@ namespace PathfinderHomebrew.Controllers
             switch (type)
             {
                 case "Weapons":
+                    totalItems = _db.Items.Where(x => x.Type == ItemType.Weapon).ToArray();
                     posts =
-                        _db.Items
-                        .Where(x => x.Type == ItemType.Weapon)
+                        totalItems
                         .Skip(pageSize * page)
                         .Take(pageSize)
                         .ToArray();
                     break;
 
                 case "Armor":
+                    totalItems = _db.Items.Where(x => x.Type == ItemType.Armor).ToArray();
                     posts =
-                        _db.Items
-                        .Where(x => x.Type == ItemType.Armor)
+                        totalItems
                         .Skip(pageSize * page)
                         .Take(pageSize)
                         .ToArray();
                     break;
 
                 case "Rings":
+                    totalItems = _db.Items.Where(x => x.Type == ItemType.Ring).ToArray();
                     posts =
-                        _db.Items
-                        .Where(x => x.Type == ItemType.Ring)
+                        totalItems
                         .Skip(pageSize * page)
                         .Take(pageSize)
                         .ToArray();
                     break;
 
                 case "Staves":
+                    totalItems = _db.Items.Where(x => x.Type == ItemType.Staff).ToArray();
                     posts =
-                        _db.Items
-                        .Where(x => x.Type == ItemType.Staff)
+                        totalItems
                         .Skip(pageSize * page)
                         .Take(pageSize)
                         .ToArray();
                     break;
 
                 case "WondrousItems":
+                    totalItems = _db.Items.Where(x => x.Type == ItemType.Wondrous_Item).ToArray();
                     posts =
-                        _db.Items
-                        .Where(x => x.Type == ItemType.Wondrous_Item)
+                        totalItems
                         .Skip(pageSize * page)
                         .Take(pageSize)
                         .ToArray();
                     break;
             }
 
+
+            var totalPosts = totalItems.Count();
+            var totalPages = (int)MathF.Ceiling((float)totalPosts / pageSize);
+
+            ViewBag.PreviousPage = previousPage;
+            ViewBag.HasPreviousPage = previousPage >= 0;
+            ViewBag.NextPage = nextPage;
+            ViewBag.HasNextPage = nextPage < totalPages;
+
+            ViewBag.Type = type;
 
             //if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             //{
@@ -109,6 +112,7 @@ namespace PathfinderHomebrew.Controllers
             return View(item);
         }
 
+        [Authorize(Policy = "AdminOnly")]
         [HttpGet, Route("create")]
         public IActionResult Create(string type, int page = 0)
         {
@@ -118,6 +122,7 @@ namespace PathfinderHomebrew.Controllers
         }
 
 
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost, Route("create")]
         public IActionResult Create(Item item, AuraType[] AuraTypes, string type, int page = 0)
         {
@@ -147,6 +152,25 @@ namespace PathfinderHomebrew.Controllers
             return RedirectToAction("Item", "Item", new
             {
                 key
+            });
+        }
+
+        [Authorize(Policy = "AdminOnly")]
+        [Route("remove")]
+        public IActionResult Remove(string key)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Index");
+            }
+
+            _db.Items.Remove(_db.Items.FirstOrDefault(x => x.Key == key));
+            _db.SaveChanges();
+
+            return RedirectToAction("Index", "Items", new
+            {
+                type = "all",
+                page = 0
             });
         }
     }

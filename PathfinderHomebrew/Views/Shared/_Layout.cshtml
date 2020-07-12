@@ -28,6 +28,21 @@
                         <li class="nav-item">
                             <a class="nav-link bg-Nav-Link" asp-area="" asp-controller="Feat" asp-action="Index">Feats</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link bg-Nav-Link" href="@Url.Action("Index", "Item", new {type = "All", page = 0 })">Items</a>
+                        </li>
+                        <li class="nav-item">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <form id="logout" action="@Url.Action("Logout", "Account")" method="POST">
+                                    <a href="javascript: $('#logout').submit()" class="nav-link bg-Nav-Link last">Logout</a>
+                                </form>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Login", "Account")" title="log in" class="nav-link bg-Nav-Link last">Login</a>
+                            }
+                        </li>
                     </ul>
                 </div>
             </div>

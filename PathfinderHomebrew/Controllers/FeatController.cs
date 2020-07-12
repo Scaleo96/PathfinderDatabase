@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PathfinderHomebrew.Models;
@@ -97,6 +98,7 @@ namespace PathfinderHomebrew.Controllers
             return View(feat);
         }
 
+        [Authorize]
         [HttpGet, Route("create")]
         public IActionResult Create()
         {
@@ -129,6 +131,7 @@ namespace PathfinderHomebrew.Controllers
         //    return View("Index");
         //}
 
+        [Authorize]
         [Route("remove")]
         public IActionResult Remove(string key)
         {

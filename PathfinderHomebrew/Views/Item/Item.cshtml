@@ -4,7 +4,10 @@
     <h1>
         <b>(@Model.TypeName()) @Model.Name</b>
 
-        <span> | <a class="feat-Link" href="@Url.Action("Remove", "Item", new { key = Model.Key })">Delete</a></span>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <span> | <a class="feat-Link" href="@Url.Action("Remove", "Item", new { key = Model.Key })">Delete</a></span>
+        }
         <br />
         <br />
     </h1>

@@ -16,14 +16,14 @@
 <p class="pager">
     @if (ViewBag.HasPreviousPage)
     {
-        <a class="prev" href="@Url.Action("Index", "Item" , new { type = ViewBag.Type, page = ViewBag.PreviousPage })">
+        <a class="prev" style="float: left;" href="@Url.Action("Index", "Item" , new { type = ViewBag.Type, page = ViewBag.PreviousPage })">
             &lt; Previous
         </a>
     }
 
     @if (ViewBag.HasNextPage)
     {
-        <a class="next" href="@Url.Action("Index", "Item" , new { type = ViewBag.Type, page = ViewBag.NextPage })">
+        <a class="next" style="float: right;" href="@Url.Action("Index", "Item" , new { type = ViewBag.Type, page = ViewBag.NextPage })">
             Next &gt;
         </a>
     }

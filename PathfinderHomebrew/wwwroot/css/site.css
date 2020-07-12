@@ -267,3 +267,30 @@ ul ul a {
 .footer-padding {
     padding-left: 20px;
 }
+
+.pager {
+    border-bottom: 1px solid #ccc;
+    height: 2em;
+    clear: both;
+}
+
+    .pager .prev {
+        float: left;
+    }
+
+    .pager .next {
+        float: right;
+    }
+
+#siteNav li:last-child a {
+    border-right: none;
+}
+
+span.tagline {
+    font: italic .8em DroidSerif, Georgia, "Times New Roman", Times, serif;
+    color: #fff;
+    text-transform: none;
+    padding-top: .5em;
+    letter-spacing: 0;
+}
+
