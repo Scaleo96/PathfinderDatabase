@@ -73,5 +73,6 @@ namespace PathfinderHomebrew.Models
         public string ConstructionRequirements { get; set; }
 
         public string AuraTypeString { get; set; }
+        public string OwnerID { get; set; }
     }
 }

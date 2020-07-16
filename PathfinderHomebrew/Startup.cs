@@ -59,6 +59,8 @@ namespace PathfinderHomebrew
                 .AddEntityFrameworkStores<IdentityDataContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddHttpContextAccessor();
+
             services.AddMvc();
 
             services.AddAuthorization(options =>

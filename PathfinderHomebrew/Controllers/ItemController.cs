@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Security.Claims;
 using PathfinderHomebrew.Models;
+
 
 namespace PathfinderHomebrew.Controllers
 {
@@ -12,10 +20,12 @@ namespace PathfinderHomebrew.Controllers
     public class ItemController : Controller
     {
         private readonly ItemDataContext _db;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ItemController(ItemDataContext db)
+        public ItemController(ItemDataContext db, IHttpContextAccessor httpContextAccessor)
         {
             _db = db;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [Route("{type}")]
@@ -112,7 +122,7 @@ namespace PathfinderHomebrew.Controllers
             return View(item);
         }
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Roles = "Administrator")]
         [HttpGet, Route("create")]
         public IActionResult Create(string type, int page = 0)
         {
@@ -122,7 +132,7 @@ namespace PathfinderHomebrew.Controllers
         }
 
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Roles = "Administrator")]
         [HttpPost, Route("create")]
         public IActionResult Create(Item item, AuraType[] AuraTypes, string type, int page = 0)
         {
@@ -145,6 +155,8 @@ namespace PathfinderHomebrew.Controllers
             }
 
             string key = item.Key;
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            item.OwnerID = userId;
 
             _db.Items.Add(item);
             _db.SaveChanges();
@@ -155,7 +167,7 @@ namespace PathfinderHomebrew.Controllers
             });
         }
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Roles = "Administrator")]
         [Route("remove")]
         public IActionResult Remove(string key)
         {

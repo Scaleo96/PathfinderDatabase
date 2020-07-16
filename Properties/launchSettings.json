@@ -1,0 +1,10 @@
+﻿{
+  "profiles": {
+    "PathfinderHomebrew": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

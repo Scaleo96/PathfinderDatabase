@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Security.Claims;
 using PathfinderHomebrew.Models;
 
 namespace PathfinderHomebrew.Controllers
@@ -14,10 +19,12 @@ namespace PathfinderHomebrew.Controllers
     public class FeatController : Controller
     {
         private readonly FeatDataContext _db;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public FeatController(FeatDataContext db)
+        public FeatController(FeatDataContext db, IHttpContextAccessor httpContextAccessor)
         {
             _db = db;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [Route("")]
@@ -115,6 +122,8 @@ namespace PathfinderHomebrew.Controllers
             }
 
             string key = feat.Key;
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            feat.OwnerID = userId;
 
             _db.Feats.Add(feat);
             _db.SaveChanges();

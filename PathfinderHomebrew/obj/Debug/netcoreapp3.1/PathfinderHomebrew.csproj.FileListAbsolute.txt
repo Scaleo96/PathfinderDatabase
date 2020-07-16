@@ -124,3 +124,5 @@ C:\Users\Johan\source\repos\PathfinderHomebrew\PathfinderHomebrew\bin\Debug\netc
 C:\Users\Johan\source\repos\PathfinderHomebrew\PathfinderHomebrew\obj\Debug\netcoreapp3.1\PathfinderHomebrew.csproj.CoreCompileInputs.cache
 C:\Users\Johan\source\repos\PathfinderHomebrew\PathfinderHomebrew\obj\Debug\netcoreapp3.1\PathfinderHomebrew.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Johan\source\repos\PathfinderHomebrew\PathfinderHomebrew\obj\Debug\netcoreapp3.1\PathfinderHomebrew.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Johan\source\repos\PathfinderHomebrew\PathfinderHomebrew\obj\Debug\netcoreapp3.1\Razor\Views\Role\Index.cshtml.g.cs
+C:\Users\Johan\source\repos\PathfinderHomebrew\PathfinderHomebrew\obj\Debug\netcoreapp3.1\Razor\Views\Account\AccessDenied.cshtml.g.cs

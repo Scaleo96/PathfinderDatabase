@@ -4,7 +4,7 @@
     <h1>
         <b>(@Model.TypeName()) @Model.Name</b>
 
-        @if (User.Identity.IsAuthenticated)
+        @if (User.IsInRole("Administrator"))
         {
             <span> | <a class="feat-Link" href="@Url.Action("Remove", "Item", new { key = Model.Key })">Delete</a></span>
         }

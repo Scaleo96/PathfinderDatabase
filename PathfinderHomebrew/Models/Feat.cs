@@ -38,5 +38,7 @@ namespace PathfinderHomebrew.Models
         public string FlavorText { get; set; }
         [Display(Name = "Abridged Benefit")]
         public string BenefitAbridged { get; set; }
+
+        public string OwnerID { get; set; }
     }
 }

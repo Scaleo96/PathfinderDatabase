@@ -4,7 +4,10 @@
     <h1>
         <b>(@Model.Type.ToString()) @Model.Name</b>
 
-        <span> | <a class="feat-Link" href="@Url.Action("Remove", "Feat", new { key = Model.Key })">Delete</a></span>
+        @if (User.IsInRole("Administrator"))
+        {
+            <span> | <a class="feat-Link" href="@Url.Action("Remove", "Feat", new { key = Model.Key })">Delete</a></span>
+        }
         <br />
         <br />
     </h1>
