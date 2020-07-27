@@ -1,9 +1,15 @@
 ﻿@model IEnumerable<PathfinderHomebrew.Models.Feat>
 
-<h1>Feats | <span><a asp-area="" asp-controller="Feat" asp-action="Create"><b>Add New Feat</b></a></span></h1>
+    <h1>
+        Feats
+        @if (User.IsInRole("Administrator"))
+        {
+            <span> | <a asp-area="" asp-controller="Feat" asp-action="Create"><b>Add New Feat</b></a></span>
+        }
+    </h1>
 
 <p>
-    Below is a list of homebrew and thrird-party feats allowed.
+    Below is a list of allowed third-party and homebrew feats.
 </p>
 
 <p class="pager">

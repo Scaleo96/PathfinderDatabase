@@ -21,11 +21,13 @@ namespace PathfinderHomebrew.Controllers
     {
         private readonly ItemDataContext _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthorizationService _authorizationService;
 
-        public ItemController(ItemDataContext db, IHttpContextAccessor httpContextAccessor)
+        public ItemController(ItemDataContext db, IHttpContextAccessor httpContextAccessor, IAuthorizationService authorizationService)
         {
             _db = db;
             _httpContextAccessor = httpContextAccessor;
+            _authorizationService = authorizationService;
         }
 
         [Route("{type}")]
@@ -109,7 +111,7 @@ namespace PathfinderHomebrew.Controllers
             return View(posts);
         }
 
-        [Route("detect/{key}")]
+        [Route("detectmagic/{key}")]
         public IActionResult Item(string key)
         {
             var item = _db.Items.FirstOrDefault(x => x.Key == key);
@@ -122,19 +124,30 @@ namespace PathfinderHomebrew.Controllers
             return View(item);
         }
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpGet, Route("create")]
-        public IActionResult Create(string type, int page = 0)
+        public async Task<IActionResult> Create(string type, int page = 0)
         {
             ViewBag.Type = type;
+
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, userId, Operations.Create);
+
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
 
             return View();
         }
 
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpPost, Route("create")]
-        public IActionResult Create(Item item, AuraType[] AuraTypes, string type, int page = 0)
+        public async Task<IActionResult> Create([Bind("Type, ItemSlot, Name, AuraStrength, CasterLevel, Weight," +
+            " Price, Description, Artifact, ConstructionRequirements, Destruction, Intelligent, Alignment," +
+            " Ego, Senses, Int, Wis, Cha, Communication, SpecialPurpose, DedicatedPower, CasterLevelI, Concentration," +
+            " spellLikeAbilities, DestructionKnown")] Item item, AuraType[] AuraTypes, string type, int page = 0)
         {
             item.AuraTypes = new List<AuraTypeM>();
             string auraString = "";
@@ -157,6 +170,14 @@ namespace PathfinderHomebrew.Controllers
             string key = item.Key;
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             item.OwnerID = userId;
+            item.PostedDate = DateTime.Now;
+
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, userId, Operations.Create);
+
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
 
             _db.Items.Add(item);
             _db.SaveChanges();
@@ -167,23 +188,106 @@ namespace PathfinderHomebrew.Controllers
             });
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Route("Edit")]
+        public async Task<IActionResult> Edit(string key, string type)
+        {
+            var item = _db.Items.FirstOrDefault(x => x.Key == key);
+
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, userId, Operations.Create);
+
+            ViewBag.Type = type;
+
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
+
+            return View(item);
+        }
+
+        [HttpPost, Route("Edit"), ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditPost(string? key)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, userId, Operations.Update);
+
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
+
+            var item = _db.Items.FirstOrDefault(x => x.Key == key);
+
+            if (await TryUpdateModelAsync<Item>(
+                item,
+                "",
+                x => x.Name, x => x.Type, x => x.ItemSlot,
+                x => x.AuraTypes, x => x.AuraStrength, x => x.CasterLevel,
+                x => x.Weight, x => x.Price, x => x.Description,
+                x => x.ConstructionRequirements))
+            {
+                try
+                {
+                    await _db.SaveChangesAsync();
+                    return RedirectToAction("Item", "Item", new
+                    {
+                        key
+                    });
+                }
+                catch (DbUpdateException /* ex */)
+                {
+                    ModelState.AddModelError("", "Unable to save changes. " + "Try again, and see if the problem persists, " +
+                        "see your systam administrator.");
+                }
+            }
+
+            return View(item);
+        }
+
+        //[Authorize(Roles = "Administrator")]
         [Route("remove")]
-        public IActionResult Remove(string key)
+        public async Task<IActionResult> Remove(string key)
         {
             if (!ModelState.IsValid)
             {
                 return View("Index");
             }
 
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, userId, Operations.Create);
+
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
+
             _db.Items.Remove(_db.Items.FirstOrDefault(x => x.Key == key));
             _db.SaveChanges();
 
-            return RedirectToAction("Index", "Items", new
-            {
-                type = "all",
-                page = 0
-            });
+            //return RedirectToAction("Index", "Item", new
+            //{
+            //    page = 0
+            //});
+
+            return RedirectToAction("Index", "Item", new Microsoft.AspNetCore.Routing.RouteValueDictionary(new { type = "All"}));
+
+            //return RedirectToRoute("Item_Index", new { controller = "Item", action = "Index", type = "All"});
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("AddSpellLikeAbility")]
+        public ActionResult AddSpellLikeAbility([Bind("spellLikeAbilities")] Item item)
+        {
+            item.spellLikeAbilities.Add(new SpellLikeAbility());
+            return PartialView("SpellLikeAbilities", item);
         }
     }
 }

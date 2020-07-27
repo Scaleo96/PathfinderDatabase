@@ -1,0 +1,72 @@
+﻿@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model PathfinderHomebrew.Models.Feat
+
+<h1>Edit Feat | <span><a asp-area="" asp-controller="Feat" asp-action="Index"><b>Cancel</b></a></span></h1>
+
+@{
+    var parms = new Dictionary<string, string>
+    {
+        { "key", Model.Key }
+    };
+}
+
+<fieldset>
+    <form asp-action="Edit" asp-controller="Feat" asp-all-route-data="parms">
+
+        <div asp-validation-summary="ModelOnly" class="input-validation-error"></div>
+
+
+        <p>
+            <label asp-for="Type"></label>
+            @Html.DropDownList("Type", new SelectList(Enum.GetValues(typeof(FeatType))), "Feat Type", new { @class = "form-control" })
+            <span asp-validation-for="Type"></span>
+        </p>
+
+        <p>
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" placeholder="Feat name" />
+            <span asp-validation-for="Name"></span>
+        </p>
+
+        <p>
+            <label asp-for="Prerequisites"></label>
+            <input asp-for="Prerequisites" class="form-control" placeholder="Feat prerequisites" />
+            <span asp-validation-for="Prerequisites"></span>
+        </p>
+
+        <p>
+            <label asp-for="Benefits"></label>
+            <textarea asp-for="Benefits" class="form-control" placeholder="Feat description"></textarea>
+            <span asp-validation-for="Benefits"></span>
+        </p>
+
+        <p>
+            <label asp-for="BenefitAbridged"></label>
+            <textarea asp-for="BenefitAbridged" class="form-control" placeholder="Short description of feat"></textarea>
+            <span asp-validation-for="BenefitAbridged"></span>
+        </p>
+
+        <p>
+            <label asp-for="Special"></label>
+            <textarea asp-for="Special" class="form-control" placeholder="Special rules"></textarea>
+            <span asp-validation-for="Special"></span>
+        </p>
+
+        <p>
+            <label asp-for="Normal"></label>
+            <textarea asp-for="Normal" class="form-control" placeholder="Normal function without feat"></textarea>
+            <span asp-validation-for="Normal"></span>
+        </p>
+
+        <p>
+            <label asp-for="FlavorText"></label>
+            <textarea asp-for="FlavorText" class="form-control" placeholder="Feat flavorText"></textarea>
+            <span asp-validation-for="FlavorText"></span>
+        </p>
+
+        <p>
+            <button type="submit" value="Save">Update Feat</button>
+        </p>
+
+    </form>
+</fieldset>

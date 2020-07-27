@@ -269,7 +269,7 @@ ul ul a {
 }
 
 .pager {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #fff;
     height: 2em;
     clear: both;
 }
@@ -281,6 +281,10 @@ ul ul a {
     .pager .next {
         float: right;
     }
+
+.checkboxLeft {
+    float: left;
+}
 
 #siteNav li:last-child a {
     border-right: none;

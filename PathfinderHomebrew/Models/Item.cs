@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
@@ -59,6 +60,7 @@ namespace PathfinderHomebrew.Models
         public ItemType Type { get; set; }
         [Display(Name = "Item Slot")]
         public ItemSlot ItemSlot { get; set; }
+        [Required]
         public string Name { get; set; }
         [Display(Name = "Auras")]
         public List<AuraTypeM> AuraTypes { get; set; }
@@ -69,10 +71,50 @@ namespace PathfinderHomebrew.Models
         public float Weight { get; set; }
         public int Price { get; set; }
         public string Description { get; set; }
+        [Display(Name = "Is Artifact?")]
+        public bool Artifact { get; set; }
         [Display(Name = "Construction Requirements")]
         public string ConstructionRequirements { get; set; }
+        public string Destruction { get; set; }
+        public bool Intelligent { get; set; }
 
+        [AllowNull]
+        public string Alignment { get; set; }
+        [AllowNull]
+        public int? Ego { get; set; }
+        [AllowNull]
+        public string Senses { get; set; }
+        [AllowNull]
+        public int? Int { get; set; }
+        [AllowNull]
+        public int? Wis { get; set; }
+        [AllowNull]
+        public int? Cha { get; set; }
+        [AllowNull]
+        public string Communication { get; set; }
+        [AllowNull]
+        [Display(Name = "Special Purpose")]
+        public string SpecialPurpose { get; set; }
+        [AllowNull]
+        [Display(Name = "Dedicated Power")]
+        public string DedicatedPower { get; set; }
+        [AllowNull]
+        [Display(Name = "Spell Caster Level")]
+        public int? CasterLevelI { get; set; }
+        [AllowNull]
+        public int? Concentration { get; set; }
+        [Display(Name = "spell-Like Abilities")]
+        public List<SpellLikeAbility> spellLikeAbilities { get; set; }
+        [Display(Name = "Destruction Known")]
+        public bool DestructionKnown { get; set; }
+
+        public DateTime PostedDate { get; set; }
         public string AuraTypeString { get; set; }
         public string OwnerID { get; set; }
+
+        public Item()
+        {
+            spellLikeAbilities = new List<SpellLikeAbility>();
+        }
     }
 }

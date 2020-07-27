@@ -4,7 +4,7 @@
 <h1>Create A New Item | <span>@Html.ActionLink("Back", "Index", "Item", new { type = ViewBag.Type }, new { @class = "feat-Link", @style = "font-weight: bold;" })</span></h1>
 
 <fieldset>
-    <form asp-action="Create" asp-controller="Item">
+    <form asp-action="Create" asp-controller="Item" id="form">
 
         <div asp-validation-summary="ModelOnly" class="input-validation-error"></div>
 
@@ -12,7 +12,7 @@
         <div>
             <p>
                 <label asp-for="Type"></label>
-                @Html.DropDownList("Type", new SelectList(Enum.GetValues(typeof(ItemType))), "Type", new { @class = "form-control", @id = "itemType" })
+                @Html.DropDownList("Type", new SelectList(Enum.GetValues(typeof(ItemType))), new { @class = "form-control", @id = "itemType" })
                 <span asp-validation-for="Type"></span>
             </p>
         </div>
@@ -35,6 +35,14 @@
 
         <div>
             <p>
+                <label asp-for="Artifact"></label>
+                @Html.CheckBoxFor(m => m.Artifact, new { @class = "form-control checkboxLeft", @id = "artifactCheckbox" })
+                <span asp-validation-for="Artifact"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
                 <label asp-for="AuraTypes"></label>
             </p>
             <p>
@@ -46,7 +54,7 @@
         <div>
             <p>
                 <label asp-for="AuraStrength"></label>
-                @Html.DropDownList("AuraStrength", new SelectList(Enum.GetValues(typeof(AuraStrength))), "AuraStrength", new { @class = "form-control" })
+                @Html.DropDownList("AuraStrength", new SelectList(Enum.GetValues(typeof(AuraStrength))), new { @class = "form-control" })
                 <span asp-validation-for="AuraStrength"></span>
             </p>
         </div>
@@ -85,15 +93,140 @@
 
         <div>
             <p>
-                <label asp-for="ConstructionRequirements"></label>
-                <textarea asp-for="ConstructionRequirements" class="form-control" placeholder="Enter Construction Requirements"></textarea>
+                <label asp-for="ConstructionRequirements" id="constructionLabel"></label>
+                <textarea asp-for="ConstructionRequirements" class="form-control" placeholder="Enter Construction Requirements" id="construction"></textarea>
                 <span asp-validation-for="ConstructionRequirements"></span>
             </p>
         </div>
 
         <div>
             <p>
-                <button type="submit">Create Item</button>
+                <label asp-for="DestructionKnown" id="DestructionKnownLabel"></label>
+                @Html.CheckBoxFor(m => m.DestructionKnown, new { @class = "form-control checkboxLeft", @id = "DestructionKnown" })
+                <span asp-validation-for="DestructionKnown"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="Destruction" id="destructionLabel"></label>
+                <textarea asp-for="Destruction" class="form-control" placeholder="Enter Destruction Instructions" id="destruction"></textarea>
+                <span asp-validation-for="Destruction"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="Intelligent" id="IntelligentLabel"></label>
+                @Html.CheckBoxFor(m => m.Intelligent, new { @class = "form-control checkboxLeft", @id = "Intelligent" })
+                <span asp-validation-for="Intelligent"></span>
+            </p>
+        </div>
+
+        <div>
+            <div>
+                <p>
+                    <label asp-for="Alignment"></label>
+                    <input asp-for="Alignment" class="form-control" placeholder="Item Alignment" />
+                    <span asp-validation-for="Alignment"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Senses"></label>
+                    <input asp-for="Senses" class="form-control" placeholder="Item Senses" />
+                    <span asp-validation-for="Senses"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Communication"></label>
+                    <input asp-for="Communication" class="form-control" placeholder="Item Communication" />
+                    <span asp-validation-for="Communication"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="SpecialPurpose"></label>
+                    <input asp-for="SpecialPurpose" class="form-control" placeholder="Item Special Purpose" />
+                    <span asp-validation-for="SpecialPurpose"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="DedicatedPower"></label>
+                    <input asp-for="DedicatedPower" class="form-control" placeholder="Item Dedicated Power" />
+                    <span asp-validation-for="DedicatedPower"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Int"></label>
+                    <input asp-for="Int" class="form-control" placeholder="Enter Intelligence"></>
+                    <span asp-validation-for="Int"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Wis"></label>
+                    <input asp-for="Wis" class="form-control" placeholder="Enter Wisdom"></>
+                    <span asp-validation-for="Wis"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Cha"></label>
+                    <input asp-for="Cha" class="form-control" placeholder="Enter Charisma"></>
+                    <span asp-validation-for="Cha"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Ego"></label>
+                    <input asp-for="Ego" class="form-control" placeholder="Enter Ego"></>
+                    <span asp-validation-for="Ego"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="CasterLevelI"></label>
+                    <input asp-for="CasterLevelI" class="form-control" placeholder="Enter Caster Level"></>
+                    <span asp-validation-for="CasterLevelI"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Concentration"></label>
+                    <input asp-for="Concentration" class="form-control" placeholder="Enter Concentration"></>
+                    <span asp-validation-for="Concentration"></span>
+                </p>
+            </div>
+
+            <div id="SpellLikeAbilityContainer">
+                @Html.EditorFor(Model => Model.spellLikeAbilities)
+            </div>
+
+            <div class="col-md-4">
+                <input class="btn btn-dark" type="button" id="btnAdd" value="Add Product" />
+            </div>
+
+            <br />
+
+        </div>
+
+        <div>
+            <p>
+                <button type="submit" value="Create">Create Item</button>
             </p>
         </div>
 
@@ -104,6 +237,10 @@
     <script type="text/javascript">
         $('#itemSlot').hide();
         $('#itemSlotH').hide();
+        $('#destructionLabel').hide();
+        $('#destruction').hide();
+        $('#DestructionKnownLabel').hide();
+        $('#DestructionKnown').hide();
 
         $("#itemType").change(function () {
             if ($(this).val().toString() == "Wondrous_Item") {
@@ -118,6 +255,62 @@
                 $('#itemSlot').removeAttr('required');
                 $('#itemSlot').removeAttr('data-error');
             }
+        });
+
+        $("#artifactCheckbox").change(function () {
+            if ($("#artifactCheckbox:checked").val() != null) {
+                console.log($("#artifactCheckbox:checked").val().toString());
+                $('#destructionLabel').show();
+                $('#destruction').show();
+                $('#destruction').attr('required', '');
+                $('#destruction').attr('data-error', 'This field is required.');
+                $('#DestructionKnownLabel').show();
+                $('#DestructionKnown').show();
+
+                $('#constructionLabel').hide();
+                $('#construction').hide();
+                $('#construction').removeAttr('required', '');
+                $('#construction').removeAttr('data-error', 'This field is required.');
+            }
+            else {
+                console.log("No");
+                $('#destructionLabel').hide();
+                $('#destruction').hide();
+                $('#destruction').removeAttr('required');
+                $('#destruction').removeAttr('data-error');
+                $('#DestructionKnownLabel').hide();
+                $('#DestructionKnown').hide();
+
+                $('#constructionLabel').show();
+                $('#construction').show();
+                $('#construction').attr('required', '');
+                $('#construction').attr('data-error', 'This field is required.');
+            }
+        });
+    </script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        var index = 0;
+        $("#btnAdd").on('click', function () {
+            $.ajax({
+                async: false,
+                data: $('#form').serialize(),
+                type: "POST",
+                url: '/item/AddSpellLikeAbility',
+                success: function (partialView) {
+                    $('#SpellLikeAbilityContainer').html(partialView);
+                }
+            });
+            let test = $("#SpellLikeAbilityContainer").children();
+            console.log(test.length);
+            let l = index;
+            for (let i = 0; i < test.length; i++) {
+                $(test[i]).find('#btnRemove').on('click', function () {
+                    $(test[i]).remove();
+                });
+            }
+
         });
     </script>
 }

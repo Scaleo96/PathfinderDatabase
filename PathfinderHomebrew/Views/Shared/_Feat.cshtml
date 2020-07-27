@@ -1,0 +1,51 @@
+﻿@model PathfinderHomebrew.Models.Feat
+@using PathfinderHomebrew.Authorization;
+@using Microsoft.AspNetCore.Authorization
+@using PathfinderHomebrew.Models
+@inject IAuthorizationService AuthorizationService
+
+<article>
+    <h1>
+        <b>(@Model.Type.ToString()) @Model.Name</b>
+
+        @if ((await AuthorizationService.AuthorizeAsync(
+       User, Model.OwnerID, Operations.Update)).Succeeded)
+        {
+            <span> | <a class="feat-Link" href="@Url.Action("Edit", "Feat", new { key = Model.Key })">Edit</a></span>
+        }
+        @if ((await AuthorizationService.AuthorizeAsync(
+       User, Model.OwnerID, Operations.Delete)).Succeeded)
+        {
+            <span> | <a class="feat-Link" href="@Url.Action("Remove", "Feat", new { key = Model.Key })">Delete</a></span>
+        }
+        <br />
+        <br />
+    </h1>
+    <div class="details">
+    </div>
+    <div class="content feat-Content">
+
+        @if (Model.FlavorText != null && Model.FlavorText.Length > 0)
+        {
+            <p><i>@Model.FlavorText</i></p>
+        }
+
+        @if (Model.Prerequisites != null && Model.Prerequisites.Length > 0)
+        {
+            <p><b class="black-ben">Prerequisites: </b>@Model.Prerequisites</p>
+        }
+
+        <p><b class="black-ben">Benefit: </b>@Model.Benefits</p>
+
+        @if (Model.Special != null && Model.Special.Length > 0)
+        {
+            <p><b class="black-ben">Special: </b>@Model.Special</p>
+        }
+
+        @if (Model.Normal != null && Model.Normal.Length > 0)
+        {
+            <p><b class="black-ben">Normal: </b>@Model.Normal</p>
+        }
+
+    </div>
+</article>

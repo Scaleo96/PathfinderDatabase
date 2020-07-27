@@ -4,5 +4,23 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>This site is a work in progress.</p>
+    <p>This is a editable collection of allowed third-party content and homebrew content for my Pathfinder game. New stuff and features are still being added, so keep an eye out for updates to the site. So far the site contains a collection of feats and items, but the next feature planned to be added is an app to help calculate the automatic bonus progression system.</p>
+</div>
+<br />
+<div class="border"></div>
+<br />
+<div class="text-center">
+    <h1 class="display-4">Newest post!</h1>
+    <p>Below is the newst post added to the site.</p>
+    <br />
+    <div class="border"></div>
+    <br />
+    @if (ViewBag.Type == "feat")
+    {
+        @await Component.InvokeAsync("NewFeat");
+    }
+    @if (ViewBag.Type == "item")
+    {
+        @await Component.InvokeAsync("NewItem");
+    }
 </div>

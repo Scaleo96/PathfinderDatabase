@@ -39,6 +39,7 @@ namespace PathfinderHomebrew.Models
         [Display(Name = "Abridged Benefit")]
         public string BenefitAbridged { get; set; }
 
+        public DateTime PostedDate { get; set; }
         public string OwnerID { get; set; }
     }
 }

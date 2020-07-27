@@ -24,13 +24,13 @@ namespace PathfinderHomebrew.Authorization
                 return Task.CompletedTask;
             }
 
-            //if (requirement.Name != Constants.CreateOperationName &&
-            //    requirement.Name != Constants.ReadOperationName &&
-            //    requirement.Name != Constants.UpdateOperationName &&
-            //    requirement.Name != Constants.DeleteOperationName)
-            //{
-            //    return Task.CompletedTask;
-            //}
+            if (requirement.Name != Models.Constants.CreateOperationName &&
+                requirement.Name != Models.Constants.ReadOperationName &&
+                requirement.Name != Models.Constants.UpdateOperationName &&
+                requirement.Name != Models.Constants.DeleteOperationName)
+            {
+                return Task.CompletedTask;
+            }
 
             if (resource == _userManager.GetUserId(context.User))
             {

@@ -1,0 +1,206 @@
+﻿@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model PathfinderHomebrew.Models.Item
+
+<h1>Create A New Item | <span>@Html.ActionLink("Cancel", "Index", "Item", new { type = ViewBag.Type }, new { @class = "feat-Link", @style = "font-weight: bold;" })</span></h1>
+
+@{
+    var parms = new Dictionary<string, string>
+{
+        { "key", Model.Key }
+    };
+}
+
+<fieldset>
+    <form asp-action="Edit" asp-controller="Item" asp-all-route-data="parms">
+
+        <div asp-validation-summary="ModelOnly" class="input-validation-error"></div>
+
+
+        <div>
+            <p>
+                <label asp-for="Type"></label>
+                @Html.DropDownList("Type", new SelectList(Enum.GetValues(typeof(ItemType))), new { @class = "form-control", @id = "itemType" })
+                <span asp-validation-for="Type"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="ItemSlot" id="itemSlotH"></label>
+                @Html.DropDownList("ItemSlot", new SelectList(Enum.GetValues(typeof(ItemSlot))), new { @class = "form-control", @id = "itemSlot" })
+                <span asp-validation-for="Type"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" placeholder="Item name" />
+                <span asp-validation-for="Name"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="Artifact"></label>
+                @Html.CheckBoxFor(m => m.Artifact, new { @class = "form-control", @id = "artifactCheckbox" })
+                <span asp-validation-for="Artifact"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="AuraTypes"></label>
+            </p>
+            <p>
+                @Html.DropDownList("AuraTypes", new MultiSelectList(Enum.GetValues(typeof(AuraType))), new { multiple = "multiple" })
+                <span asp-validation-for="AuraTypes"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="AuraStrength"></label>
+                @Html.DropDownList("AuraStrength", new SelectList(Enum.GetValues(typeof(AuraStrength))), new { @class = "form-control" })
+                <span asp-validation-for="AuraStrength"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="CasterLevel"></label>
+                <input asp-for="CasterLevel" class="form-control" placeholder="Enter Caster Level"></>
+                <span asp-validation-for="CasterLevel"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="Weight"></label>
+                <input asp-for="Weight" class="form-control" placeholder="Enter Weight"></>
+                <span asp-validation-for="Weight"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="Price"></label>
+                <input asp-for="Price" class="form-control" placeholder="Enter Price"></>
+                <span asp-validation-for="Price"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control" placeholder="Enter Item Description"></textarea>
+                <span asp-validation-for="Description"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="ConstructionRequirements" id="constructionLabel"></label>
+                <textarea asp-for="ConstructionRequirements" class="form-control" placeholder="Enter Construction Requirements" id="construction"></textarea>
+                <span asp-validation-for="ConstructionRequirements"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="DestructionKnown" id="DestructionKnownLabel"></label>
+                @Html.CheckBoxFor(m => m.DestructionKnown, new { @class = "form-control", @id = "DestructionKnown" })
+                <span asp-validation-for="DestructionKnown"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <label asp-for="Destruction" id="destructionLabel"></label>
+                <textarea asp-for="Destruction" class="form-control" placeholder="Enter Destruction Instructions" id="destruction"></textarea>
+                <span asp-validation-for="Destruction"></span>
+            </p>
+        </div>
+
+        <div>
+            <p>
+                <button type="submit" value="Save">Update Item</button>
+            </p>
+        </div>
+
+    </form>
+</fieldset>
+
+@section Scripts {
+    <script type="text/javascript">
+        $('#itemSlot').hide();
+        $('#itemSlotH').hide();
+
+        if ($("#artifactCheckbox:checked").val() != null) {
+            $('#constructionLabel').hide();
+            $('#construction').hide();
+            $('#construction').removeAttr('required', '');
+            $('#construction').removeAttr('data-error', 'This field is required.');
+        }
+        else {
+            $('#destructionLabel').hide();
+            $('#destruction').hide();
+            $('#destruction').removeAttr('required');
+            $('#destruction').removeAttr('data-error');
+            $('#DestructionKnownLabel').hide();
+            $('#DestructionKnown').hide();
+            $('#DestructionKnown').removeAttr('required', '');
+            $('#DestructionKnown').removeAttr('data-error', 'This field is required.');
+        }
+
+        $("#itemType").change(function () {
+            if ($(this).val().toString() == "Wondrous_Item") {
+                $('#itemSlot').show();
+                $('#itemSlotH').show();
+                $('#itemSlot').attr('required', '');
+                $('#itemSlot').attr('data-error', 'This field is required.');
+            }
+            else {
+                $('#itemSlot').hide();
+                $('#itemSlotH').hide();
+                $('#itemSlot').removeAttr('required');
+                $('#itemSlot').removeAttr('data-error');
+            }
+        });
+
+        $("#artifactCheckbox").change(function () {
+            if ($("#artifactCheckbox:checked").val() != null) {
+                console.log($("#artifactCheckbox:checked").val().toString());
+                $('#destructionLabel').show();
+                $('#destruction').show();
+                $('#destruction').attr('required', '');
+                $('#destruction').attr('data-error', 'This field is required.');
+                $('#DestructionKnownLabel').show();
+                $('#DestructionKnown').show();
+                $('#DestructionKnown').attr('required', '');
+                $('#DestructionKnown').attr('data-error', 'This field is required.');
+
+                $('#constructionLabel').hide();
+                $('#construction').hide();
+                $('#construction').removeAttr('required', '');
+                $('#construction').removeAttr('data-error', 'This field is required.');
+            }
+            else {
+                console.log("No");
+                $('#destructionLabel').hide();
+                $('#destruction').hide();
+                $('#destruction').removeAttr('required');
+                $('#destruction').removeAttr('data-error');
+                $('#DestructionKnownLabel').hide();
+                $('#DestructionKnown').hide();
+                $('#DestructionKnown').removeAttr('required', '');
+                $('#DestructionKnown').removeAttr('data-error', 'This field is required.');
+
+                $('#constructionLabel').show();
+                $('#construction').show();
+                $('#construction').attr('required', '');
+                $('#construction').attr('data-error', 'This field is required.');
+            }
+        });
+    </script>
+}

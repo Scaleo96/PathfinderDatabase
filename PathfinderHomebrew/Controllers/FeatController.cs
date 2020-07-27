@@ -20,11 +20,13 @@ namespace PathfinderHomebrew.Controllers
     {
         private readonly FeatDataContext _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthorizationService _authorizationService;
 
-        public FeatController(FeatDataContext db, IHttpContextAccessor httpContextAccessor)
+        public FeatController(FeatDataContext db, IHttpContextAccessor httpContextAccessor, IAuthorizationService authorizationService)
         {
             _db = db;
             _httpContextAccessor = httpContextAccessor;
+            _authorizationService = authorizationService;
         }
 
         [Route("")]
@@ -107,14 +109,23 @@ namespace PathfinderHomebrew.Controllers
 
         [Authorize]
         [HttpGet, Route("create")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, userId, Operations.Create);
+
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
+
             return View();
         }
 
 
         [HttpPost, Route("create")]
-        public IActionResult Create(Feat feat)
+        public async Task<IActionResult> Create(Feat feat)
         {
             if (!ModelState.IsValid)
             {
@@ -124,6 +135,14 @@ namespace PathfinderHomebrew.Controllers
             string key = feat.Key;
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             feat.OwnerID = userId;
+            feat.PostedDate = DateTime.Now;
+
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, userId, Operations.Create);
+
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
 
             _db.Feats.Add(feat);
             _db.SaveChanges();
@@ -140,13 +159,80 @@ namespace PathfinderHomebrew.Controllers
         //    return View("Index");
         //}
 
-        [Authorize]
+        [Route("Edit")]
+        public async Task<IActionResult> Edit(string key)
+        {
+            var feat = _db.Feats.FirstOrDefault(x => x.Key == key);
+
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, userId, Operations.Create);
+
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
+
+            return View(feat);
+        }
+
+        [HttpPost, Route("Edit"), ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditPost(string? key)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, userId, Operations.Update);
+
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
+
+            var feat = _db.Feats.FirstOrDefault(x => x.Key == key);
+
+            if (await TryUpdateModelAsync<Feat>(
+                feat,
+                "",
+                x => x.Name, x => x.Type, x => x.Benefits,
+                x => x.Special, x => x.Normal, x => x.Prerequisites,
+                x => x.FlavorText, x => x.BenefitAbridged))
+            {
+                try
+                {
+                    await _db.SaveChangesAsync();
+                    return RedirectToAction("Feat", "Feat", new
+                    {
+                        key
+                    });
+                }
+                catch (DbUpdateException /* ex */)
+                {
+                    ModelState.AddModelError("", "Unable to save changes. " + "Try again, and see if the problem persists, " +
+                        "see your systam administrator.");
+                }
+            }
+
+            return View(feat);
+        }
+
         [Route("remove")]
-        public IActionResult Remove(string key)
+        public async Task<IActionResult> Remove(string key)
         {
             if (!ModelState.IsValid)
             {
                 return View("Index");
+            }
+
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, userId, Operations.Create);
+
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
             }
 
             _db.Feats.Remove(_db.Feats.FirstOrDefault(x => x.Key == key));

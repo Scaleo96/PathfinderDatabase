@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Identity.UI;
 using PathfinderHomebrew.Models;
 using Microsoft.Extensions.Options;
+using PathfinderHomebrew.Authorization;
 
 namespace PathfinderHomebrew
 {
@@ -69,6 +70,10 @@ namespace PathfinderHomebrew
                     policy =>
                     policy.RequireClaim("Admin"));
             });
+
+            services.AddScoped<IAuthorizationHandler, IsOwnerAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, ManagerAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, AdministratorsAuthorizationHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

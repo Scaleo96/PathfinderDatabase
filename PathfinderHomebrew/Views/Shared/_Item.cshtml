@@ -1,0 +1,75 @@
+﻿@model PathfinderHomebrew.Models.Item
+@using PathfinderHomebrew.Authorization;
+@using Microsoft.AspNetCore.Authorization
+@using PathfinderHomebrew.Models
+@inject IAuthorizationService AuthorizationService
+
+@{
+    var parms = new Dictionary<string, string>
+{
+        { "key", Model.Key },
+        { "type", Model.Type.ToString() }
+    };
+}
+
+<article>
+    <h1>
+        <b>(@Model.TypeName()) @Model.Name</b>
+
+        @if ((await AuthorizationService.AuthorizeAsync(
+   User, Model.OwnerID, Operations.Update)).Succeeded)
+        {
+            <span> | <a class="feat-Link" asp-area="" asp-controller="Item" asp-action="Edit" asp-all-route-data="parms"><b>Edit</b></a></span>
+        }
+        @if ((await AuthorizationService.AuthorizeAsync(
+   User, Model.OwnerID, Operations.Delete)).Succeeded)
+        {
+            <span> | <a class="feat-Link" href="@Url.Action("Remove", "Item", new { key = Model.Key })">Delete</a></span>
+        }
+        <br />
+        <br />
+    </h1>
+    <div class="details">
+    </div>
+    <div class="content feat-Content">
+
+        <p>
+            <b class="black-ben">Aura</b> @Model.AuraStrength
+            @for (int i = 0; i < Model.AuraTypes.Count; i++)
+            {@Model.AuraTypes[i].AuraType.ToString()@if (Model.AuraTypes.Count - 1 > i)
+            {<span>, </span>}
+            else
+            {<span>;</span>}}
+            <b class="black-ben">CL</b>
+            @(Model.CasterLevel)th;
+            <b class="black-ben">Weight </b>
+            @Model.Weight
+            lbs;
+            <b class="black-ben">Price </b>
+            @Model.Price
+            gp
+        </p>
+
+        <p class="item-divider">DESCRIPTION</p>
+        <p>@Model.Description</p>
+        @if (!Model.Artifact)
+        {
+            <p class="item-divider">CONSTRUCTION REQUIREMENTS</p>
+            <p>@Model.ConstructionRequirements; <b>Cost </b> @(Model.Price/2) gp</p>
+        }
+        else
+        {
+            <p class="item-divider">DESTRUCTION</p>
+            @if ((await AuthorizationService.AuthorizeAsync(
+          User, Model.OwnerID, Operations.Update)).Succeeded || Model.DestructionKnown)
+            {
+                <p>@Model.Destruction;</p>
+            }
+            else
+            {
+                <p>Unknown;</p>
+            }
+        }
+
+    </div>
+</article>
