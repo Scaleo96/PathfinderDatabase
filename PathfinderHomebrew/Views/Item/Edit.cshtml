@@ -11,7 +11,7 @@
 }
 
 <fieldset>
-    <form asp-action="Edit" asp-controller="Item" asp-all-route-data="parms">
+    <form asp-action="Edit" asp-controller="Item" asp-all-route-data="parms" id="form">
 
         <div asp-validation-summary="ModelOnly" class="input-validation-error"></div>
 
@@ -124,6 +124,115 @@
 
         <div>
             <p>
+                <label asp-for="Intelligent" id="IntelligentLabel"></label>
+                @Html.CheckBoxFor(m => m.Intelligent, new { @class = "form-control checkboxLeft", @id = "Intelligent" })
+                <span asp-validation-for="Intelligent"></span>
+            </p>
+        </div>
+
+        <div id="IntItem">
+            <div>
+                <p>
+                    <label asp-for="Alignment"></label>
+                    <input asp-for="Alignment" class="form-control" placeholder="Item Alignment" />
+                    <span asp-validation-for="Alignment"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Senses"></label>
+                    <input asp-for="Senses" class="form-control" placeholder="Item Senses" />
+                    <span asp-validation-for="Senses"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Communication"></label>
+                    <input asp-for="Communication" class="form-control" placeholder="Item Communication" />
+                    <span asp-validation-for="Communication"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="SpecialPurpose"></label>
+                    <input asp-for="SpecialPurpose" class="form-control" placeholder="Item Special Purpose" />
+                    <span asp-validation-for="SpecialPurpose"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="DedicatedPower"></label>
+                    <input asp-for="DedicatedPower" class="form-control" placeholder="Item Dedicated Power" />
+                    <span asp-validation-for="DedicatedPower"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Int"></label>
+                    <input asp-for="Int" class="form-control" placeholder="Enter Intelligence"></>
+                    <span asp-validation-for="Int"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Wis"></label>
+                    <input asp-for="Wis" class="form-control" placeholder="Enter Wisdom"></>
+                    <span asp-validation-for="Wis"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Cha"></label>
+                    <input asp-for="Cha" class="form-control" placeholder="Enter Charisma"></>
+                    <span asp-validation-for="Cha"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Ego"></label>
+                    <input asp-for="Ego" class="form-control" placeholder="Enter Ego"></>
+                    <span asp-validation-for="Ego"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="CasterLevelI"></label>
+                    <input asp-for="CasterLevelI" class="form-control" placeholder="Enter Caster Level"></>
+                    <span asp-validation-for="CasterLevelI"></span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <label asp-for="Concentration"></label>
+                    <input asp-for="Concentration" class="form-control" placeholder="Enter Concentration"></>
+                    <span asp-validation-for="Concentration"></span>
+                </p>
+            </div>
+
+            <div id="SpellLikeAbilityContainer">
+                @Html.EditorFor(Model => Model.spellLikeAbilities)
+            </div>
+
+            <div class="col-md-4">
+                <input class="btn btn-dark" type="button" id="btnAdd" value="Add Product" />
+            </div>
+
+            <br />
+
+        </div>
+
+        <div>
+            <p>
                 <button type="submit" value="Save">Update Item</button>
             </p>
         </div>
@@ -151,6 +260,10 @@
             $('#DestructionKnown').hide();
             $('#DestructionKnown').removeAttr('required', '');
             $('#DestructionKnown').removeAttr('data-error', 'This field is required.');
+        }
+
+        if ($('#Intelligent:checked').val() == null) {
+            $('#IntItem').hide()
         }
 
         $("#itemType").change(function () {
@@ -200,6 +313,44 @@
                 $('#construction').show();
                 $('#construction').attr('required', '');
                 $('#construction').attr('data-error', 'This field is required.');
+            }
+        });
+
+        $("#Intelligent").change(function () {
+            if ($('#Intelligent:checked').val() != null) {
+                $('#IntItem').show();
+            }
+            else {
+                $('#IntItem').hide();
+            }
+        });
+
+        $("#btnRemove").on("click", function () {
+            $(this).parents("div.row:first").remove();
+            return false;
+        });
+    </script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $("#btnAdd").on('click', function () {
+            if ($('#itemName').val() != "") {
+                $.ajax({
+                    async: false,
+                    data: $('#form').serialize(),
+                    type: "POST",
+                    url: '/item/AddSpellLikeAbility',
+                    success: function (partialView) {
+                        $('#SpellLikeAbilityContainer').html(partialView);
+                    }
+                });
+                let children = $("#SpellLikeAbilityContainer").children();
+                for (let i = 0; i < children.length; i++) {
+                    let newIndex = i;
+                    $(children[newIndex]).find('#btnRemove').on('click', function () {
+                        $(children[newIndex]).remove();
+                    });
+                }
             }
         });
     </script>

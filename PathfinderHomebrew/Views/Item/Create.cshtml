@@ -28,7 +28,7 @@
         <div>
             <p>
                 <label asp-for="Name"></label>
-                <input asp-for="Name" class="form-control" placeholder="Item name" />
+                <input asp-for="Name" class="form-control" placeholder="Item name" id="itemName" />
                 <span asp-validation-for="Name"></span>
             </p>
         </div>
@@ -123,7 +123,7 @@
             </p>
         </div>
 
-        <div>
+        <div id="IntItem">
             <div>
                 <p>
                     <label asp-for="Alignment"></label>
@@ -241,6 +241,7 @@
         $('#destruction').hide();
         $('#DestructionKnownLabel').hide();
         $('#DestructionKnown').hide();
+        $('#IntItem').hide()
 
         $("#itemType").change(function () {
             if ($(this).val().toString() == "Wondrous_Item") {
@@ -287,30 +288,41 @@
                 $('#construction').attr('data-error', 'This field is required.');
             }
         });
+
+        $("#Intelligent").change(function () {
+            if ($('#Intelligent:checked').val() != null) {
+                $('#IntItem').show();
+            }
+            else {
+                $('#IntItem').hide();
+            }
+        });
+
     </script>
 
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script type="text/javascript">
-        var index = 0;
         $("#btnAdd").on('click', function () {
-            $.ajax({
-                async: false,
-                data: $('#form').serialize(),
-                type: "POST",
-                url: '/item/AddSpellLikeAbility',
-                success: function (partialView) {
-                    $('#SpellLikeAbilityContainer').html(partialView);
-                }
-            });
-            let test = $("#SpellLikeAbilityContainer").children();
-            console.log(test.length);
-            let l = index;
-            for (let i = 0; i < test.length; i++) {
-                $(test[i]).find('#btnRemove').on('click', function () {
-                    $(test[i]).remove();
+            if ($('#itemName').val() != "") {
+                $.ajax({
+                    async: false,
+                    data: $('#form').serialize(),
+                    type: "POST",
+                    url: '/item/AddSpellLikeAbility',
+                    success: function (partialView) {
+                        $('#SpellLikeAbilityContainer').html(partialView);
+                    }
                 });
+                let test = $("#SpellLikeAbilityContainer").children();
+                //console.log(test.length);
+                for (let i = 0; i < test.length; i++) {
+                    let newIndex = i;
+                    $(test[newIndex]).find('#btnRemove').on('click', function () {
+                        console.log("Removed: " + $(test[newIndex]).toString());
+                        $(test[newIndex]).remove();
+                    });
+                }
             }
-
         });
     </script>
 }

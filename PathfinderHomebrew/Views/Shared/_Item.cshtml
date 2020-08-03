@@ -50,6 +50,48 @@
             gp
         </p>
 
+        @if (Model.Intelligent == true)
+        {
+    <p class="item-divider">STATISTICS</p>
+            <p>
+                <b class="black-ben">Alignment</b> @(Model.Alignment);
+                <b class="black-ben">Ego </b> @(Model.Ego)
+                <b class="black-ben">Senses</b> @(Model.Senses)
+            </p>
+
+            <p>
+                <b class="black-ben">Intelligence </b> @(Model.Int);
+                <b class="black-ben">Wisdom </b> @(Model.Wis);
+                <b class="black-ben">Charisma  </b> @(Model.Cha);
+            </p>
+
+            <p>
+                <b class="black-ben">Language </b> @(Model.Communication)
+            <b class="black-ben">Special Purpose </b> @(Model.SpecialPurpose)
+            </p>
+
+            @if (Model.DedicatedPower.Length > 0)
+            {
+                <p>
+                    <b class="black-ben">Dedicated Power </b> @(Model.DedicatedPower)
+                </p>
+            }
+
+            @if (Model.spellLikeAbilities.Count > 0)
+            {
+                <p>
+                    <b class="black-ben">Spell-Like Abilities </b> (CL @(Model.CasterLevelI)th, concentration @(Model.Concentration))
+                </p>
+
+                @for (int i = 0; i < Model.spellLikeAbilities.Count; i++)
+                {
+                    <p>
+                        @Model.spellLikeAbilities[i].Frequancy.ToString()/@(Model.spellLikeAbilities[i].FreqType)-@Model.spellLikeAbilities[i].Name
+                    </p>
+                }
+            }
+        }
+
         <p class="item-divider">DESCRIPTION</p>
         <p>@Model.Description</p>
         @if (!Model.Artifact)
@@ -61,7 +103,7 @@
         {
             <p class="item-divider">DESTRUCTION</p>
             @if ((await AuthorizationService.AuthorizeAsync(
-          User, Model.OwnerID, Operations.Update)).Succeeded || Model.DestructionKnown)
+   User, Model.OwnerID, Operations.Update)).Succeeded || Model.DestructionKnown)
             {
                 <p>@Model.Destruction;</p>
             }

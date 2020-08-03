@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PathfinderHomebrew.Models;
 
@@ -22,6 +23,7 @@ namespace PathfinderHomebrew.ViewComponents
         {
             var items =
             _dbItem.Items
+            .Include(i => i.spellLikeAbilities)
             .OrderByDescending(x => x.PostedDate)
             .ToArray();
 

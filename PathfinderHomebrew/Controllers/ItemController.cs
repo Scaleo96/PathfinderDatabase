@@ -114,13 +114,14 @@ namespace PathfinderHomebrew.Controllers
         [Route("detectmagic/{key}")]
         public IActionResult Item(string key)
         {
-            var item = _db.Items.FirstOrDefault(x => x.Key == key);
+            var item = _db.Items.Include(i => i.spellLikeAbilities).FirstOrDefault(x => x.Key == key);
             string[] auras = item.AuraTypeString.Split('?');
             item.AuraTypes = new List<AuraTypeM>();
             foreach(string s in auras)
             {
                 item.AuraTypes.Add(new AuraTypeM(item.Id, (AuraType)Int32.Parse(s)));
             }
+            var test = item.spellLikeAbilities;
             return View(item);
         }
 
@@ -172,6 +173,8 @@ namespace PathfinderHomebrew.Controllers
             item.OwnerID = userId;
             item.PostedDate = DateTime.Now;
 
+            var test = item.spellLikeAbilities;
+
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, userId, Operations.Create);
 
             if (!isAuthorized.Succeeded)
@@ -191,7 +194,7 @@ namespace PathfinderHomebrew.Controllers
         [Route("Edit")]
         public async Task<IActionResult> Edit(string key, string type)
         {
-            var item = _db.Items.FirstOrDefault(x => x.Key == key);
+            var item = _db.Items.Include(i => i.spellLikeAbilities).FirstOrDefault(x => x.Key == key);
 
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var isAuthorized = await _authorizationService.AuthorizeAsync(User, userId, Operations.Create);
@@ -223,7 +226,7 @@ namespace PathfinderHomebrew.Controllers
                 return Forbid();
             }
 
-            var item = _db.Items.FirstOrDefault(x => x.Key == key);
+            var item = _db.Items.Include(i => i.spellLikeAbilities).FirstOrDefault(x => x.Key == key);
 
             if (await TryUpdateModelAsync<Item>(
                 item,
@@ -231,7 +234,14 @@ namespace PathfinderHomebrew.Controllers
                 x => x.Name, x => x.Type, x => x.ItemSlot,
                 x => x.AuraTypes, x => x.AuraStrength, x => x.CasterLevel,
                 x => x.Weight, x => x.Price, x => x.Description,
-                x => x.ConstructionRequirements))
+                x => x.ConstructionRequirements,
+                x => x.Alignment, x => x.Artifact, x => x.CasterLevelI,
+                x => x.Cha, x => x.Communication, x => x.Concentration,
+                x => x.DedicatedPower, x => x.Destruction,
+                x => x.DestructionKnown, x => x.Ego, x => x.Int,
+                x => x.Intelligent, x => x.Senses,
+                x => x.SpecialPurpose, x => x.spellLikeAbilities,
+                x => x.Wis))
             {
                 try
                 {
@@ -268,7 +278,7 @@ namespace PathfinderHomebrew.Controllers
                 return Forbid();
             }
 
-            _db.Items.Remove(_db.Items.FirstOrDefault(x => x.Key == key));
+            _db.Items.Remove(_db.Items.Include(i => i.spellLikeAbilities).FirstOrDefault(x => x.Key == key));
             _db.SaveChanges();
 
             //return RedirectToAction("Index", "Item", new
@@ -284,10 +294,17 @@ namespace PathfinderHomebrew.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("AddSpellLikeAbility")]
-        public ActionResult AddSpellLikeAbility([Bind("spellLikeAbilities")] Item item)
+        public ActionResult AddSpellLikeAbility([Bind("Name, spellLikeAbilities")] Item item)
         {
             item.spellLikeAbilities.Add(new SpellLikeAbility());
             return PartialView("SpellLikeAbilities", item);
         }
+
+        public ViewResult BlankEditorRow()
+        {
+            return View("SpellLikeAbilities", new SpellLikeAbility());
+        }
+
+
     }
 }

@@ -13,5 +13,6 @@ namespace PathfinderHomebrew.Models
         public FreqType FreqType { get; set; }
         public int Frequancy { get; set; }
         public string Name { get; set; }
+        public Item Item { get; set; }
     }
 }
